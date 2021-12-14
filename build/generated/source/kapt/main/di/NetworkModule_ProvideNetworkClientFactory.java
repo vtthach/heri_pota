@@ -3,9 +3,9 @@ package di;
 import api.HarryPotterNetworkClient;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
+import dagger.internal.Preconditions;
 import javax.annotation.processing.Generated;
 import javax.inject.Provider;
-import org.jetbrains.annotations.Nullable;
 import retrofit2.Retrofit;
 
 @DaggerGenerated
@@ -25,7 +25,6 @@ public final class NetworkModule_ProvideNetworkClientFactory implements Factory<
   }
 
   @Override
-  @Nullable
   public HarryPotterNetworkClient get() {
     return provideNetworkClient(retrofitProvider.get());
   }
@@ -35,8 +34,7 @@ public final class NetworkModule_ProvideNetworkClientFactory implements Factory<
     return new NetworkModule_ProvideNetworkClientFactory(retrofitProvider);
   }
 
-  @Nullable
   public static HarryPotterNetworkClient provideNetworkClient(Retrofit retrofit) {
-    return NetworkModule.INSTANCE.provideNetworkClient(retrofit);
+    return Preconditions.checkNotNullFromProvides(NetworkModule.INSTANCE.provideNetworkClient(retrofit));
   }
 }

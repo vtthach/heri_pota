@@ -1,34 +1,34 @@
 package ui
 
-import androidx.compose.desktop.Window
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.IntSize
-
-const val DEFAULT_WIDTH = 500
-const val DEFAULT_HEIGHT = 500
+import di.Injector
 
 @Composable
-fun CharactersView() =
-    Window(
-        title = "Harry Potter",
-        size = IntSize(DEFAULT_WIDTH, DEFAULT_HEIGHT),
-    ) {
-//            val mainOutput = remember { mutableStateOf(TextFieldValue("0")) }
-//            Column(Modifier.fillMaxHeight()) {
-//                DisplayPanel(
-//                    Modifier.weight(1f),
-//                    mainOutput
-//                )
-//                Keyboard(
-//                    Modifier.weight(4f),
-//                    mainOutput
-//                )
-//            }
+fun CharactersView(injector: Injector) {
+    val viewModel: CharactersViewModel = injector.applicationComponent.charactersViewModel
+    var state by remember {
+        mutableStateOf<CharactersViewModel.CharactersState>(CharactersViewModel.CharactersState.Idle)
     }
+
+    LaunchedEffect(Unit) {
+        state = viewModel.fetchCharacters()
+    }
+
+    when (state) {
+        is CharactersViewModel.CharactersState.Failed -> println("Failed")
+        is CharactersViewModel.CharactersState.Idle -> println("Idle")
+        is CharactersViewModel.CharactersState.Success -> {
+            val st = (state as CharactersViewModel.CharactersState.Success)
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(items = st.data.orEmpty(), itemContent = {
+                    Text(it.name)
+                })
+            }
+        }
+    }
+}

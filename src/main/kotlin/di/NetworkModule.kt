@@ -21,8 +21,7 @@ private annotation class InternalApi
 @OptIn(ExperimentalSerializationApi::class)
 object NetworkModule {
 
-    private const val OKHttpTimeout = 100L
-    private const val BaseUrl = "https://ws.audioscrobbler.com/"
+    private val json = Json { ignoreUnknownKeys = true }
 
     @Singleton
     @Provides
@@ -47,12 +46,12 @@ object NetworkModule {
         return Retrofit.Builder()
             .baseUrl("http://hp-api.herokuapp.com/api/")
             .client(okHttpClient)
-            .addConverterFactory(Json.asConverterFactory(contentType))
+            .addConverterFactory(json.asConverterFactory(contentType))
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideNetworkClient(@InternalApi retrofit: Retrofit): HarryPotterNetworkClient? =
+    fun provideNetworkClient(@InternalApi retrofit: Retrofit): HarryPotterNetworkClient =
         retrofit.create(HarryPotterNetworkClient::class.java)
 }

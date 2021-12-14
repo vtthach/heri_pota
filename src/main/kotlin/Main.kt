@@ -4,18 +4,22 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import androidx.compose.ui.window.rememberWindowState
+import di.Injector
 import ui.CharactersView
 
 @Composable
 @Preview
 fun App() {
+    val injector = Injector()
     MaterialTheme {
-        CharactersView()
+        CharactersView(injector)
     }
 }
 
 fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
+    val windowState = rememberWindowState()
+    Window(onCloseRequest = ::exitApplication, title = "Heri Pota") {
         App()
     }
 }

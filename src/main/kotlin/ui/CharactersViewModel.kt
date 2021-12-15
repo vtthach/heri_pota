@@ -1,32 +1,41 @@
 package ui
 
 import api.HarryPotterNetworkClient
-import model.Character
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import model.UICharacter
 import javax.inject.Inject
 
 class CharactersViewModel @Inject constructor(
     private val networkClient: HarryPotterNetworkClient
-) : BaseViewModel {
+) {
 
     sealed class CharactersState {
         object Idle : CharactersState()
         object Failed : CharactersState()
-        data class Success(val data: List<Character>?) : CharactersState()
+        data class Success(val uiCharacters: List<UICharacter>?) : CharactersState()
     }
 
-    suspend fun fetchCharacters(): CharactersState {
-        return try {
+    suspend fun fetchCharacters(): CharactersState = withContext(Dispatchers.IO) {
+        try {
             val charactersResponse = networkClient.fetchCharacters()
 
             when {
-                charactersResponse.isSuccessful -> CharactersState.Success(charactersResponse.body())
-                else -> CharactersState.Failed
+                charactersResponse.isSuccessful -> {
+                    val characters = charactersResponse.body()?.map { it.toUICharacter() }
+                    withContext(Dispatchers.Main) {
+                        CharactersState.Success(characters)
+                    }
+                }
+                else -> withContext(Dispatchers.Main) {
+                    CharactersState.Failed
+                }
             }
         } catch (exception: Exception) {
-            CharactersState.Failed
+            exception.printStackTrace()
+            withContext(Dispatchers.Main) {
+                CharactersState.Failed
+            }
         }
-    }
-
-    override fun dispose() {
     }
 }

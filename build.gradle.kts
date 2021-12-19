@@ -24,10 +24,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-    implementation("com.google.dagger:dagger:2.40.3")
+    implementation("com.google.dagger:dagger:2.40.5")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation("com.arkivanov.decompose:decompose:0.4.0")
+    implementation("com.arkivanov.decompose:extensions-compose-jetbrains:0.4.0")
 
-    kapt("com.google.dagger:dagger-compiler:2.40.3")
+    kapt("com.google.dagger:dagger-compiler:2.40.5")
 }
 
 tasks.withType<KotlinCompile> {

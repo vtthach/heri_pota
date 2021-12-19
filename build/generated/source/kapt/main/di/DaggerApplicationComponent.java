@@ -9,7 +9,7 @@ import javax.inject.Provider;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import ui.CharactersViewModel;
+import ui.CharactersComponent;
 
 @DaggerGenerated
 @Generated(
@@ -54,8 +54,8 @@ public final class DaggerApplicationComponent implements ApplicationComponent {
   }
 
   @Override
-  public CharactersViewModel getCharactersViewModel() {
-    return new CharactersViewModel(provideNetworkClientProvider.get());
+  public CharactersComponent getCharactersViewModel() {
+    return new CharactersComponent(provideNetworkClientProvider.get());
   }
 
   public static final class Builder {

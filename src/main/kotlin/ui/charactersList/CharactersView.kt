@@ -18,12 +18,13 @@ import androidx.compose.ui.graphics.ImageBitmapConfig
 import androidx.compose.ui.unit.dp
 import di.Injector
 import model.UICharacter
+import utils.RootComponent
 
 @Composable
-fun CharactersView(injector: Injector) {
-    val viewModel: CharactersViewModel = injector.applicationComponent.charactersViewModel
+fun CharactersView(root: RootComponent, injector: Injector) {
+    val viewModel: CharactersComponent = injector.applicationComponent.charactersViewModel
     var state by remember {
-        mutableStateOf<CharactersViewModel.CharactersState>(CharactersViewModel.CharactersState.Idle)
+        mutableStateOf<CharactersComponent.CharactersState>(CharactersComponent.CharactersState.Idle)
     }
     var text by rememberSaveable { mutableStateOf("") }
     var list by rememberSaveable { mutableStateOf(listOf<UICharacter>()) }
@@ -34,8 +35,8 @@ fun CharactersView(injector: Injector) {
     }
 
     when (state) {
-        is CharactersViewModel.CharactersState.Failed -> println("Failed")
-        is CharactersViewModel.CharactersState.Idle -> {
+        is CharactersComponent.CharactersState.Failed -> println("Failed")
+        is CharactersComponent.CharactersState.Idle -> {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -44,8 +45,8 @@ fun CharactersView(injector: Injector) {
                 LinearProgressIndicator()
             }
         }
-        is CharactersViewModel.CharactersState.Success -> {
-            val currentState = (state as CharactersViewModel.CharactersState.Success)
+        is CharactersComponent.CharactersState.Success -> {
+            val currentState = (state as CharactersComponent.CharactersState.Success)
             list = currentState.uiCharacters.orEmpty()
             listHelper.addAll(currentState.uiCharacters.orEmpty())
             LazyColumn(modifier = Modifier.fillMaxSize()) {
